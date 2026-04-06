@@ -63,7 +63,7 @@ export default function ProfileClient({ initialData }: { initialData: any }) {
         <div className="container">
           <div className="emblems-grid">
             <div className="emblem-item">
-              <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/bc/Coat_of_arms_of_Nigeria.svg/300px-Coat_of_arms_of_Nigeria.svg.png" alt="Nigerian Coat of Arms" />
+              <img src="/coat_of_arms.png" alt="Nigerian Coat of Arms" />
               <span>Federal Republic<br />of Nigeria</span>
             </div>
             <div className="emblem-item">
@@ -75,7 +75,7 @@ export default function ProfileClient({ initialData }: { initialData: any }) {
               <span>All Progressives<br />Congress</span>
             </div>
             <div className="emblem-item">
-              <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/79/Flag_of_Nigeria.svg/400px-Flag_of_Nigeria.svg.png" alt="Nigerian Flag" />
+              <img src="/nigerian_flag.png" alt="Nigerian Flag" />
               <span>Nigerian Flag</span>
             </div>
           </div>
