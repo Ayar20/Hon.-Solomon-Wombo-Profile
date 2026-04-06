@@ -91,6 +91,31 @@ header{
   color:#0a6e37;
 }
 
+@media (max-width: 768px) {
+  .nav {
+    flex-direction: column;
+    gap: 16px;
+    align-items: center;
+    text-align: center;
+  }
+  .brand {
+    flex-direction: column;
+    gap: 8px;
+  }
+  .brand h1 {
+    font-size: 22px !important;
+  }
+  .menu {
+    justify-content: center;
+    font-size: 14px;
+    gap: 8px;
+  }
+  .cta {
+    justify-content: center;
+    width: 100%;
+  }
+}
+
 /* Hero */
 .hero{
   padding:48px 0 18px;
@@ -120,6 +145,9 @@ header{
 }
 .stats{
   display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:16px;
+}
+@media (max-width: 600px) {
+  .stats { grid-template-columns: 1fr; }
 }
 .stat{
   background:#ffffff;border:1px solid var(--border);border-radius:12px;padding:12px;
@@ -353,4 +381,8 @@ footer{
 @media (max-width:768px){
   .emblems-grid{gap:20px}
   .emblem-item img{height:50px}
+}
+@media (max-width:480px){
+  .emblems-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
+  .emblem-item span { font-size: 10px; }
 }
