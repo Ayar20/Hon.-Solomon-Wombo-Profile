@@ -63,7 +63,7 @@ export default function ProfileClient({ initialData }: { initialData: any }) {
         <div className="container">
           <div className="emblems-grid">
             <div className="emblem-item">
-              <img src="/coat_of_arms.png" alt="Nigerian Coat of Arms" />
+              <img src="/House of Rep.png" alt="Nigerian Coat of Arms" />
               <span>Federal Republic<br />of Nigeria</span>
             </div>
             <div className="emblem-item">
