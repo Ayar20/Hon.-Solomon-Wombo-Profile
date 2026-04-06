@@ -1,0 +1,932 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!--
+    Single-file personal profile site for Hon. Solomon Wombo
+    How to use:
+    1) Replace placeholder content below (name, bio, priorities, achievements, timeline, media, contacts).
+    2) Put your image URLs (local files or hosted links) into the achievements/media arrays.
+    3) Save as index.html and open in any modern browser. No build tools needed.
+
+    Notes:
+    - Everything is inline (HTML/CSS/JS) for easy one-file deployment.
+    - You can paste text directly into the data arrays or into the HTML sections (About).
+    - The "Achievements" grid and "Media" gallery render from the JS arrays at the bottom.
+  -->
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Hon. Solomon Wombo — Profile</title>
+  <meta name="description" content="Official profile of Hon. Solomon Wombo, Member of the National Assembly." />
+  <meta name="author" content="Office of Hon. Solomon Wombo" />
+  <!-- Open Graph -->
+  <meta property="og:title" content="Hon. Solomon Wombo — Profile" />
+  <meta property="og:description" content="Achievements, priorities, timeline, and contact information." />
+  <meta property="og:type" content="website" />
+  <meta property="og:image" content="https://example.com/og-image.jpg" />
+  <meta property="og:url" content="https://example.com/" />
+  <!-- Favicon (optional) -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🏛️</text></svg>">
+
+  <style>
+    :root{
+      --bg:#ffffff;
+      --card:#f8fdf9;
+      --muted:#5a7361;
+      --text:#1a3a24;
+      --accent:#0d8f47;
+      --accent-2:#0fcf6a;
+      --border:#d4e8dc;
+      --shadow:0 10px 30px rgba(13,143,71,.15);
+      --radius:16px;
+      --radius-sm:10px;
+      --font:-apple-system,BlinkMacSystemFont,"Segoe UI",Inter,Roboto,Ubuntu,"Helvetica Neue",Arial,sans-serif;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      background:linear-gradient(180deg, #e8f5ed 0%, #ffffff 40%, #ffffff 100%);
+      color:var(--text);
+      font-family:var(--font);
+      line-height:1.6;
+    }
+    a{color:var(--text);text-decoration:none}
+    img{max-width:100%;display:block}
+    .container{max-width:1080px;margin:0 auto;padding:0 20px}
+    header{
+      position:sticky;top:0;z-index:50;
+      background:#0d8f47;
+      color:#ffffff;
+      border-bottom:1px solid #0a6e37;
+      box-shadow: 
+        0 4px 12px rgba(0,0,0,0.2),
+        inset 0 4px 6px rgba(255,255,255,0.3),
+        inset 0 -4px 6px rgba(0,0,0,0.3),
+        inset 4px 0 6px rgba(255,255,255,0.2),
+        inset -4px 0 6px rgba(0,0,0,0.2);
+    }
+    .nav{
+      display:flex;align-items:center;justify-content:space-between;
+      padding:12px 0;
+    }
+    .brand{
+      display:flex;gap:12px;align-items:center;
+    }
+    .brand h1{
+      font-size:28px;
+      margin:0;
+      color:#ffffff;
+      text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+      letter-spacing: 0.5px;
+    }
+    .brand .muted{
+      color:rgba(255,255,255,0.85);
+      font-weight:500;
+    }
+    .brand img{
+      width:80px;
+      height:80px;
+      border-radius:50%;
+      object-fit:cover;
+      border: 3px solid #ffffff;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+    }
+    .menu{display:flex;gap:18px;flex-wrap:wrap}
+    .menu a{
+      padding:8px 12px;border-radius:10px;color:rgba(255,255,255,0.9);
+      transition:.2s ease;
+    }
+    .menu a:hover{color:#ffffff;background:rgba(255,255,255,0.15)}
+    .cta{
+      display:flex;gap:10px;align-items:center;
+    }
+    .cta a{
+      padding:8px 14px;border-radius:10px;border:1px solid rgba(255,255,255,0.3);
+      color:#ffffff;background:rgba(255,255,255,0.1);
+      transition: .2s ease;
+    }
+    .cta a:hover{
+      background:rgba(255,255,255,0.2);
+    }
+    .cta .primary{
+      background:#ffffff;
+      border:none;color:#0d8f47;font-weight:700;
+    }
+    .cta .primary:hover{
+      background:#e8f5ed;
+      color:#0a6e37;
+    }
+
+    /* Hero */
+    .hero{
+      padding:48px 0 18px;
+    }
+    .hero-card{
+      display:grid;grid-template-columns:1.1fr .9fr;gap:24px;
+    }
+    @media (max-width:900px){.hero-card{grid-template-columns:1fr}}
+    .panel{
+      background:radial-gradient(1200px 400px at 20% 20%, rgba(19,194,122,.08), transparent 45%),
+                 radial-gradient(1200px 400px at 80% 0%, rgba(43,138,247,.08), transparent 35%),
+                 var(--card);
+      border:1px solid var(--border);
+      border-radius:var(--radius);
+      padding:24px;box-shadow:var(--shadow);
+    }
+    .title{
+      font-size:32px;margin:0 0 8px;letter-spacing:.2px;
+    }
+    .subtitle{
+      color:var(--muted);margin:0 0 16px;font-weight:500;
+    }
+    .tags{display:flex;gap:8px;flex-wrap:wrap;margin:8px 0 16px}
+    .tag{
+      font-size:12px;color:#5a7361;border:1px solid var(--border);
+      border-radius:999px;padding:6px 10px;background:#ffffff;
+    }
+    .stats{
+      display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:16px;
+    }
+    .stat{
+      background:#ffffff;border:1px solid var(--border);border-radius:12px;padding:12px;
+    }
+    .stat .kpi{font-weight:800;font-size:20px}
+    .stat .label{color:var(--muted);font-size:12px}
+    .portrait{
+      width:100%;height:100%;border-radius:var(--radius);
+      overflow:hidden;border:1px solid var(--border);
+      background:#f8fdf9;
+    }
+    .portrait img{width:100%;height:100%;object-fit:cover}
+
+    /* Sections */
+    section{padding:26px 0}
+    .section-title{font-size:22px;margin:0 0 12px}
+    .muted{color:var(--muted)}
+    .grid{
+      display:grid;grid-template-columns:repeat(3,1fr);gap:16px;
+    }
+    @media (max-width:900px){.grid{grid-template-columns:repeat(2,1fr)}}
+    @media (max-width:600px){.grid{grid-template-columns:1fr}}
+
+    /* Cards & media */
+    .card{
+      background:var(--card);border:1px solid var(--border);
+      border-radius:var(--radius-sm);overflow:hidden;
+    }
+    .card .body{padding:12px}
+    .card h4{margin:6px 0 6px;font-size:16px}
+    .card p{margin:4px 0;color:#5a7361;font-size:14px}
+    .chip{font-size:12px;color:#5a7361;background:#ffffff;border:1px solid var(--border);border-radius:999px;padding:4px 8px;margin-right:8px}
+    .media{aspect-ratio:16/10;background:#f8fdf9;border-bottom:1px solid var(--border)}
+    .media img{width:100%;height:100%;object-fit:cover}
+    
+    /* Priority cards with solid green background and embossed effect */
+    #prioritiesGrid .card {
+      background:#0d8f47;
+      border:1px solid #0a6e37;
+      box-shadow:0 0 20px rgba(255,255,255,0.3), 0 10px 30px rgba(13,143,71,.3),
+                 inset 0 4px 8px rgba(255,255,255,0.5), 
+                 inset 0 -4px 8px rgba(0,0,0,0.4),
+                 inset 4px 0 8px rgba(255,255,255,0.4),
+                 inset -4px 0 8px rgba(0,0,0,0.3);
+    }
+    #prioritiesGrid .card .chip {
+      background:rgba(255,255,255,0.95);
+      color:#0d8f47;
+      border-color:rgba(255,255,255,0.3);
+      font-weight:700;
+    }
+    #prioritiesGrid .card h4 {
+      color:#0d8f47;
+      font-weight:700;
+      background:#ffffff;
+      padding:10px 14px;
+      border-radius:8px;
+      margin:8px 0;
+      box-shadow:0 2px 6px rgba(0,0,0,0.15);
+    }
+    #prioritiesGrid .card p {
+      color:rgba(255,255,255,0.9);
+      font-weight:700;
+    }
+    
+    /* About section with solid green background */
+    #about .panel {
+      background:#0d8f47;
+      border:1px solid #0d8f47;
+    }
+    .about-card {
+      background: #ffffff;
+      border-radius: 12px;
+      padding: 24px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+      color: #0d8f47;
+    }
+    .about-card p:first-of-type {
+      font-size: 1.25rem;
+      font-weight: 600;
+      line-height: 1.5;
+    }
+
+    /* Timeline */
+    .timeline{
+      display:grid;gap:14px;
+      position: relative;
+      grid-template-columns: repeat(2, 1fr);
+    }
+    @media (max-width:768px){.timeline{grid-template-columns:1fr}}
+    .event{
+      display:grid;grid-template-columns:auto 1fr;gap:20px;align-items:start;
+      position: relative;
+      --t-bg: #ffffff;
+      --t-border: var(--border);
+      --t-weight: 400;
+    }
+    .event::before {
+      content: '';position: absolute;top: 20px;left: 6px;width: 2px;height: 100%;
+      background: var(--border);z-index: 0;
+    }
+    .event:nth-last-child(-n+2)::before {display: none}
+    @media (max-width:768px){
+      .event:nth-last-child(2)::before {display: block}
+      .event:nth-last-child(1)::before {display: none}
+    }
+    .event .dot{
+      width:14px;height:14px;border-radius:50%;
+      background: #0d8f47;
+      box-shadow:0 0 0 4px rgba(13,143,71,0.2);
+      margin-top:20px;
+      z-index: 2;
+      position: relative;
+    }
+    .event .panel{
+      padding:20px;
+      transition: transform 0.2s ease;
+      background: var(--t-bg);
+      border: 1px solid var(--t-border);
+      color: var(--text);
+    }
+    .event .panel:hover {
+      transform: translateX(5px);
+    }
+    .event .panel h4 {
+      color: #0d8f47;
+      margin-top: 0;
+    }
+    .event .panel .date,
+    .event .panel p {
+      color: var(--muted);
+      font-weight: var(--t-weight);
+    }
+    
+    /* Checkerboard: Green on 1,4,5,8... (4n+1, 4n) */
+    .event:nth-child(4n+1), .event:nth-child(4n) {
+      --t-bg: rgba(13, 143, 71, 0.08);
+      --t-border: rgba(13, 143, 71, 0.15);
+      --t-weight: 500;
+    }
+    /* Mobile: Odd=Green */
+    @media (max-width:768px){
+      .event:nth-child(odd) {
+        --t-bg: rgba(13, 143, 71, 0.08);
+        --t-border: rgba(13, 143, 71, 0.15);
+        --t-weight: 500;
+      }
+      .event:nth-child(even) {
+        --t-bg: #ffffff;
+        --t-border: var(--border);
+        --t-weight: 400;
+      }
+    }
+    
+    .event .date {
+      font-size: 13px;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    /* Lightbox */
+    .lightbox{
+      position:fixed;inset:0;background:rgba(0,0,0,.75);display:none;
+      align-items:center;justify-content:center;padding:24px;z-index:100;
+    }
+    .lightbox.open{display:flex}
+    .lightbox .frame{
+      max-width:min(1000px, 92vw);max-height:86vh;background:#ffffff;border-radius:12px;
+      border:1px solid var(--border);overflow:hidden;box-shadow:var(--shadow)
+    }
+    .lightbox .frame img{width:100%;height:auto;display:block}
+    .lightbox .meta{padding:12px 14px}
+    .lightbox .meta h4{margin:0 0 6px}
+    .lightbox .meta p{margin:0;color:#5a7361}
+
+    /* Footer */
+    footer{
+      padding:22px 0;border-top:1px solid var(--border);color:#5a7361
+    }
+    .social{display:flex;gap:10px;flex-wrap:wrap}
+    .social a{
+      padding:8px 12px;border:1px solid var(--border);border-radius:10px;
+      color:#5a7361;background:#f8fdf9
+    }
+    .contact{
+      display:grid;grid-template-columns:1fr 1fr;gap:16px
+    }
+    @media (max-width:900px){.contact{grid-template-columns:1fr}}
+    .contact .panel input,.contact .panel textarea{
+      width:100%;padding:10px 12px;border-radius:10px;border:1px solid var(--border);
+      background:#ffffff;color:var(--text);margin:8px 0
+    }
+    .btn{
+      display:inline-flex;align-items:center;gap:8px;padding:10px 14px;border-radius:10px;
+      background:linear-gradient(135deg, var(--accent), var(--accent-2));border:none;color:#ffffff;font-weight:700;cursor:pointer
+    }
+    .btn.secondary{background:#f8fdf9;color:var(--text);border:1px solid var(--border)}
+    .note{font-size:12px;color:#5a7361;margin-top:6px}
+    
+    /* Official Emblems Section */
+    .emblems{
+      background:#ffffff;
+      border-bottom:1px solid var(--border);
+      padding:16px 0;
+    }
+    .emblems-grid{
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      gap:40px;
+      flex-wrap:wrap;
+    }
+    .emblem-item{
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      gap:8px;
+    }
+    .emblem-item img{
+      height:60px;
+      width:auto;
+      object-fit:contain;
+      filter:drop-shadow(0 2px 4px rgba(0,0,0,0.1));
+    }
+    .emblem-item span{
+      font-size:11px;
+      color:var(--muted);
+      text-align:center;
+      font-weight:600;
+    }
+    @media (max-width:768px){
+      .emblems-grid{gap:20px}
+      .emblem-item img{height:50px}
+    }
+  </style>
+</head>
+<body>
+  <!-- Top navigation -->
+  <header>
+    <div class="container nav">
+      <div class="brand">
+        <img src="Profile Picture.jpg" alt="Hon. Solomon Wombo">
+        <div>
+          <h1>Hon. Solomon Wombo</h1>
+          <div class="muted">Member, National Assembly</div>
+        </div>
+      </div>
+      <nav class="menu" aria-label="Primary">
+        <a href="#about">About</a>
+        <a href="#priorities">Priorities</a>
+        <a href="#achievements">Achievements</a>
+        <a href="#timeline">Timeline</a>
+        <a href="#media">Media</a>
+        <a href="#contact">Contact</a>
+      </nav>
+      <div class="cta">
+        <a class="primary" href="#contact">Get in touch</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Official Emblems -->
+  <div class="emblems">
+    <div class="container">
+      <div class="emblems-grid">
+        <div class="emblem-item">
+          <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/bc/Coat_of_arms_of_Nigeria.svg/300px-Coat_of_arms_of_Nigeria.svg.png" alt="Nigerian Coat of Arms">
+          <span>Federal Republic<br>of Nigeria</span>
+        </div>
+        <div class="emblem-item">
+          <img src="House of Rep.png" alt="National Assembly">
+          <span>National Assembly</span>
+        </div>
+        <div class="emblem-item">
+          <img src="APC Logo.jfif" alt="APC Logo">
+          <span>All Progressives<br>Congress</span>
+        </div>
+        <div class="emblem-item">
+          <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/79/Flag_of_Nigeria.svg/400px-Flag_of_Nigeria.svg.png" alt="Nigerian Flag">
+          <span>Nigerian Flag</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Hero -->
+  <div class="container hero">
+    <div class="hero-card">
+      <div class="panel">
+        <h2 class="title">Service, accountability, and impact.</h2>
+        <p class="subtitle">Focused on effective representation, community development, and transparent governance.</p>
+        <div class="tags">
+          <span class="tag">National Assembly</span>
+          <span class="tag">Public Service</span>
+          <span class="tag">Community Development</span>
+        </div>
+        <div class="stats">
+          <div class="stat">
+            <div class="kpi" id="kpiProjects">0</div>
+            <div class="label">Documented projects</div>
+          </div>
+          <div class="stat">
+            <div class="kpi" id="kpiBills">0</div>
+            <div class="label">Bills & motions</div>
+          </div>
+          <div class="stat">
+            <div class="kpi" id="kpiCommunities">0</div>
+            <div class="label">Communities reached</div>
+          </div>
+        </div>
+      </div>
+      <div class="portrait">
+        <!-- Replace with a high-quality portrait -->
+        <img src="Hon Solomon Wombo.jpg" alt="Portrait of Hon. Solomon Wombo">
+      </div>
+    </div>
+  </div>
+
+  <!-- About -->
+  <section id="about">
+    <div class="container">
+      <h3 class="section-title">About</h3>
+      <div class="panel">
+        <div class="about-card">
+          <p>
+            Hon. Prince Solomon Wombo is a first-term member of the Nigerian House of Representatives, representing the Katsina-Ala/Ukum/Logo Federal Constituency 
+            (the Sankera Axis) of Benue State. Born on April 4, 1965, he is affectionately known by his constituents as the "Prince of Peace."
+          </p>
+          <p class="muted">
+            A member of the All Progressives Congress (APC), Hon. Wombo holds a Bachelor of Science degree and served as Special Adviser on Local Government 
+            and Chieftaincy Affairs before his election. In the 10th National Assembly, he serves on the House Committee on Appropriation and as Deputy Chairman 
+            of the Committee on North East Development Commission. His stewardship is characterized by a comprehensive approach to security, education, healthcare, 
+            infrastructure, and economic development across the Sankera Axis.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Priorities -->
+  <section id="priorities">
+    <div class="container">
+      <h3 class="section-title">Legislative priorities</h3>
+      <div class="grid" id="prioritiesGrid">
+        <!-- Populated by JS -->
+      </div>
+    </div>
+  </section>
+
+  <!-- Achievements -->
+  <section id="achievements">
+    <div class="container">
+      <h3 class="section-title">Achievements</h3>
+      <p class="muted">A selection of documented projects, programs, and initiatives. Click any card to view details.</p>
+      <div class="grid" id="achievementsGrid">
+        <!-- Populated by JS -->
+      </div>
+    </div>
+  </section>
+
+  <!-- Timeline -->
+  <section id="timeline">
+    <div class="container">
+      <h3 class="section-title">Timeline</h3>
+      <div class="timeline" id="timelineList">
+        <!-- Populated by JS -->
+      </div>
+    </div>
+  </section>
+
+  <!-- Media -->
+  <section id="media">
+    <div class="container">
+      <h3 class="section-title">Media</h3>
+      <p class="muted">Photos and press materials from community engagements and legislative activities.</p>
+      <div class="grid" id="mediaGrid">
+        <!-- Populated by JS -->
+      </div>
+    </div>
+  </section>
+
+  <!-- Contact -->
+  <section id="contact">
+    <div class="container">
+      <h3 class="section-title">Contact</h3>
+      <div class="contact">
+        <div class="panel">
+          <h4>Office of Hon. Solomon Wombo</h4>
+          <p class="muted">For official correspondence, media requests, and community matters.</p>
+          <form id="contactForm">
+            <input type="text" name="name" placeholder="Your name" required>
+            <input type="email" name="email" placeholder="Your email" required>
+            <textarea name="message" rows="4" placeholder="Your message" required></textarea>
+            <button type="submit" class="btn">Send message</button>
+            <span class="note">Submitting opens your email client with a pre-filled message.</span>
+          </form>
+        </div>
+        <div class="panel">
+          <h4>Stay connected</h4>
+          <div class="social" id="socialLinks">
+            <!-- Populated by JS -->
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="container" style="display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap">
+      <div>© <span id="year"></span> Office of Hon. Solomon Wombo. All rights reserved.</div>
+      <div class="muted">Built as a single-file site for easy sharing.</div>
+    </div>
+  </footer>
+
+  <!-- Lightbox -->
+  <div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Image viewer">
+    <div class="frame">
+      <img id="lightboxImg" alt="">
+      <div class="meta">
+        <h4 id="lightboxTitle"></h4>
+        <p id="lightboxDesc"></p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // ====== EDITABLE DATA ======
+    const DATA = {
+      // Updated counts based on comprehensive research
+      kpis: { projects: 50, bills: 4, communities: 100 },
+
+      // Priorities: comprehensive action-oriented statements
+      priorities: [
+        { title: "Education & Skills Development", desc: "Establishing Federal College of Entrepreneurship at Zaki-Biam, upgrading College of Education Katsina-Ala to Federal University, constructing classroom blocks, and awarding 1,210+ scholarships." },
+        { title: "Healthcare Infrastructure", desc: "Renovating General Hospital Gbor, equipping PHCs in Melabu and Ayua, installing solar mini-grids at 4 PHCs for 24-hour healthcare delivery across Sankera." },
+        { title: "Water & Sanitation", desc: "Drilling 12 solar-powered and motorized boreholes in communities including Chito, Ayilamo, Tse-Igbur, Abaji-Kpav, Tine-Nune, and Mbaton Market." },
+        { title: "Infrastructure & Security", desc: "Completing Gbor-Adikpo-Alam-Kera Road, Lukul Bridge construction, installing solar street lights, and reviving Mobile Police Unit in Mbazar Community." },
+        { title: "Agriculture & Economic Empowerment", desc: "Distributing 2,000 bags of fertilizer, sponsoring mechanized agricultural center in Ugba, donating 20 tricycles to women cooperatives, training 500+ in SMEs." },
+        { title: "Youth Employment & Industrialization", desc: "Facilitating 13 recruits into Police/NDLEA/Civil Service, partnering with World Bank ACReSAL for cottage industries and agricultural processing centers." }
+      ],
+
+      // Achievements: comprehensive projects across all categories
+      achievements: [
+        // Education Projects
+        {
+          title: "Federal College of Entrepreneurship Bill",
+          date: "2024-11-20",
+          img: "Bill sponsorship.jpg",
+          desc: "Sponsored bill to establish Federal College of Entrepreneurship and Skills Acquisition in Zaki-Biam; passed second reading in National Assembly."
+        },
+        {
+          title: "1,210 Scholarships Awarded",
+          date: "2024-03-22",
+          img: "Scholarships.jpg",
+          desc: "Three-phase scholarship program providing financial aid to approximately 1,210 undergraduate students from the Benue Valley constituency."
+        },
+        {
+          title: "Six-Classroom Block - NKST Pevikyaa",
+          date: "2024-08-15",
+          img: "Education 3.jpg",
+          desc: "Constructed and commissioned a six-classroom block at NKST Primary School, Pevikyaa, enhancing learning environment for primary students."
+        },
+        {
+          title: "Six-Classroom Block - NKST Abaji-Kpav",
+          date: "2024-07-10",
+          img: "Education2.jpg",
+          desc: "Completed six-classroom block construction at NKST Primary School, Abaji-Kpav, providing modern facilities for primary education."
+        },
+        {
+          title: "ICT Hub at Tongov Secondary School",
+          date: "2024-09-05",
+          img: "https://images.unsplash.com/photo-1521737711867-e3b97375f902?q=80&w=1600&auto=format&fit=crop",
+          desc: "Completed modern ICT hub at Tongov Community Secondary School, Amaafu, bridging the digital divide for students and community."
+        },
+        
+        // Healthcare Projects
+        {
+          title: "General Hospital Gbor Renovation",
+          date: "2024-06-20",
+          img: "Renovation of Hospital.jpg",
+          desc: "Comprehensive renovation and equipping of General Hospital (Comprehensive Health Center) in Gbor, Tiir, with modern medical equipment."
+        },
+        {
+          title: "PHC Melabu Full Equipment Package",
+          date: "2024-05-12",
+          img: "Medical Equiment.jpg",
+          desc: "Equipped PHC Melabu with comprehensive medical tools, motorized borehole, and generator for uninterrupted healthcare services."
+        },
+        {
+          title: "PHC Ayua Medical Equipment",
+          date: "2024-05-18",
+          img: "Medical Supplies.jpg",
+          desc: "Provided medical equipment and motorcycles to PHC Ayua, improving healthcare delivery and emergency response capabilities."
+        },
+        {
+          title: "Solar Mini-Grid PHC Network",
+          date: "2024-04-25",
+          img: "https://images.unsplash.com/photo-1509391366360-2e959784a276?q=80&w=1600&auto=format&fit=crop",
+          desc: "Installed solar mini-grid systems at PHC Afia, PHC Tsaav, PHC Agu Center (Mbatyula/Mberev), and PHC Ikyor (Nenzev) for 24-hour operations."
+        },
+        
+        // Infrastructure & Security
+        {
+          title: "Gbor-Adikpo-Alam-Kera Road Phase I",
+          date: "2024-10-15",
+          img: "Road.jpg",
+          desc: "Completed first phase of strategic Gbor-Adikpo-Alam-Kera Road construction, improving travel safety and connectivity across constituency."
+        },
+        {
+          title: "Lukul Bridge Construction",
+          date: "2024-09-28",
+          img: "Bridge commissioning.jfif",
+          desc: "Constructed Lukul Bridge in Katsina-Ala, connecting communities and facilitating trade and transportation."
+        },
+        {
+          title: "Solar Street Lights Installation",
+          date: "2024-07-30",
+          img: "Solar Street Light.jpg",
+          desc: "Installed solar street lights in Tor Donga, Tyogbenda-Udende, and Melabu Market to deter crime and improve public safety."
+        },
+        {
+          title: "Mobile Police Unit Revival Motion",
+          date: "2024-06-12",
+          img: "Mobile_Policeman.jpg",
+          desc: "Sponsored motion to revive moribund Mobile Police Unit in Mbazar Community (Logo LGA) and establish Forward Operational Base for Sankera protection."
+        },
+        
+        // Water Projects
+        {
+          title: "12 Solar-Powered Boreholes Network",
+          date: "2024-08-01",
+          img: "Solar Borehole.jpg",
+          desc: "Drilled 12 solar-powered and motorized boreholes across Chito, Ayilamo, Tse-Igbur, Abaji-Kpav, Tine-Nune, Mbaton Market, and other communities."
+        },
+        
+        // Agriculture & Economic Empowerment
+        {
+          title: "2,000 Bags Fertilizer Distribution",
+          date: "2024-05-15",
+          img: "Agriculture.jpg",
+          desc: "Distributed 2,000 bags of fertilizer and farm inputs to farmers across Sankera Axis to enhance agricultural productivity."
+        },
+        {
+          title: "Mechanized Agricultural Center Bill",
+          date: "2024-07-22",
+          img: "Bill sponsorship.jpg",
+          desc: "Sponsored bill for establishment of mechanized agricultural center in Ugba to modernize farming practices in the constituency."
+        },
+        {
+          title: "20 Tricycles for Women Cooperatives",
+          date: "2024-04-18",
+          img: "Women & Youth Empowerment.jpg",
+          desc: "Donated 20 tricycles to Sankera Women Cooperative Societies, improving economic mobility and business transportation capabilities."
+        },
+        {
+          title: "500+ SME Training Program",
+          date: "2024-03-10",
+          img: "Skills Acquisition.jpg",
+          desc: "Trained over 500 individuals in crafts and SME operations including poultry farming, fish farming, and other viable enterprises."
+        }
+      ],
+
+      // Timeline: key milestones & legislative highlights
+      timeline: [
+        { date: "2024-11-20", title: "Federal College Entrepreneurship Bill - 2nd Reading", desc: "Bill for Federal College of Entrepreneurship and Skills Acquisition in Zaki-Biam passed Second Reading in the House." },
+        { date: "2024-11-05", title: "ACReSAL Partnership Launched", desc: "Initiated partnership with World Bank-assisted ACReSAL project for cottage industry development." },
+        { date: "2024-10-15", title: "Gbor-Adikpo Road Phase I Completed", desc: "First phase of strategic Gbor-Adikpo-Alam-Kera Road construction completed and commissioned." },
+        { date: "2024-09-28", title: "Lukul Bridge Commissioned", desc: "Constructed and commissioned Lukul Bridge in Katsina-Ala, connecting vital communities." },
+        { date: "2024-09-05", title: "ICT Hub at Tongov Community Completed", desc: "Modern ICT hub at Tongov Community Secondary School, Amaafu, completed to bridge digital divide." },
+        { date: "2024-08-15", title: "Classroom Blocks Commissioned", desc: "Six-classroom blocks at NKST Primary Schools in Pevikyaa and Abaji-Kpav commissioned." },
+        { date: "2024-08-01", title: "12 Boreholes Network Completed", desc: "Completed drilling of 12 solar-powered boreholes across multiple communities for clean water access." },
+        { date: "2024-07-30", title: "Solar Street Lights Installed", desc: "Installed solar street lights in Tor Donga, Tyogbenda-Udende, and Melabu Market for improved security." },
+        { date: "2024-07-22", title: "Mechanized Agricultural Center Bill", desc: "Sponsored bill for mechanized agricultural center in Ugba to modernize farming." },
+        { date: "2024-06-20", title: "General Hospital Gbor Renovated", desc: "Completed comprehensive renovation and equipping of General Hospital (Comprehensive Health Center), Gbor, Tiir." },
+        { date: "2024-06-12", title: "Motion on Sankera Insecurity", desc: "Initiated critical motion to revive Mobile Police Unit in Mbazar and establish Forward Operational Base for security." },
+        { date: "2024-05-18", title: "PHCs Melabu & Ayua Equipped", desc: "Fully equipped PHC Melabu and PHC Ayua with medical equipment, boreholes, and emergency motorcycles." },
+        { date: "2024-05-15", title: "2,000 Bags Fertilizer Distributed", desc: "Distributed 2,000 bags of fertilizer to farmers to enhance agricultural productivity across Sankera." },
+        { date: "2024-04-25", title: "Solar Mini-Grids for 4 PHCs", desc: "Installed solar mini-grid systems at PHC Afia, Tsaav, Agu Center, and Ikyor for 24-hour healthcare." },
+        { date: "2024-04-18", title: "20 Tricycles for Women Cooperatives", desc: "Donated 20 tricycles to Sankera Women Cooperative Societies for economic empowerment." },
+        { date: "2024-03-22", title: "1,210 Scholarships Awarded", desc: "Awarded scholarships to approximately 1,210 undergraduate students in three-phase program." },
+        { date: "2024-03-10", title: "SME Training for 500+ Individuals", desc: "Completed training of over 500 individuals in poultry farming, fish farming, and other SME skills." },
+        { date: "2024-02-20", title: "13 Constituents Recruited", desc: "Facilitated recruitment of 13 constituents into Nigeria Police Force, NDLEA, and Civil Service." },
+        { date: "2023-10-18", title: "Committee Appointments", desc: "Inaugurated as member of House Committee on Appropriation and Deputy Chairman of Committee on North East Development Commission." }
+      ],
+
+      // Media gallery: press photos or event images
+      media: [
+        {
+          title: "Scholarship Award Ceremony",
+          img: "Scholarships2.jpg",
+          desc: "Awarding scholarships to undergraduate students as part of the comprehensive educational empowerment program."
+        },
+        {
+          title: "Women Tricycle Empowerment",
+          img: "Women & Youth Empowerment 2.jpg",
+          desc: "Donated 20 tricycles to Sankera Women Cooperative Societies for economic mobility and business growth."
+        },
+        {
+          title: "Borehole Installation",
+          img: "Borehole Installation2.jpg",
+          desc: "Installation of solar-powered boreholes to provide clean water access to rural communities."
+        },
+        {
+          title: "Agriculture Input Distribution",
+          img: "Fertilizer.jpg",
+          desc: "Distribution of 2,000 bags of fertilizer and farm inputs to boost local agricultural production."
+        },
+        {
+          title: "ICT Hub Launch",
+          img: "Education2.jpg",
+          desc: "Launch of modern ICT hub at Tongov Community Secondary School to bridge the digital divide."
+        },
+        {
+          title: "Healthcare Facility Upgrade",
+          img: "Renovation of Hospital.jpg",
+          desc: "Renovated General Hospital Gbor and equipped Primary Health Care Centers."
+        },
+        {
+          title: "Road Infrastructure",
+          img: "Road.jpg",
+          desc: "Completed first phase of Gbor-Adikpo-Alam-Kera Road construction project."
+        },
+        {
+          title: "Youth SME Training",
+          img: "Skills Acquisition.jpg",
+          desc: "Training session for youths in poultry farming, fish farming, and entrepreneurship skills."
+        },
+        {
+          title: "Classroom Block Construction",
+          img: "Education 3.jpg",
+          desc: "Building of six-classroom blocks at NKST Primary Schools in Pevikyaa and Abaji-Kpav."
+        }
+      ],
+
+      // Social links & contacts
+      social: [
+        { label: "Email", href: "mailto:office@solomonwombo.ng" },
+        { label: "Phone", href: "tel:+2348000000000" },
+        { label: "Facebook", href: "https://facebook.com/solomonwombo" },
+        { label: "X (Twitter)", href: "https://twitter.com/solomonwombo" },
+        { label: "Instagram", href: "https://instagram.com/solomonwombo" }
+      ],
+
+      // Portrait URL (using local image file)
+      portrait: "Hon Solomon Wombo.jpg"
+    };
+
+    // ====== RENDERING LOGIC ======
+    const $ = sel => document.querySelector(sel);
+
+    // KPIs
+    $('#kpiProjects').textContent = DATA.kpis.projects;
+    $('#kpiBills').textContent = DATA.kpis.bills;
+    $('#kpiCommunities').textContent = DATA.kpis.communities;
+
+    // Portrait override if provided
+    if (DATA.portrait) {
+      document.querySelector('.portrait img').src = DATA.portrait;
+      document.querySelector('.portrait img').alt = 'Portrait of Hon. Solomon Wombo';
+    }
+
+    // Priorities
+    const prioritiesGrid = $('#prioritiesGrid');
+    DATA.priorities.forEach(p => {
+      const el = document.createElement('div');
+      el.className = 'card';
+      el.innerHTML = `
+        <div class="body">
+          <h4>${escapeHTML(p.title)}</h4>
+          <p>${escapeHTML(p.desc)}</p>
+        </div>`;
+      prioritiesGrid.appendChild(el);
+    });
+
+    // Achievements
+    const achievementsGrid = $('#achievementsGrid');
+    DATA.achievements.forEach(a => {
+      const el = document.createElement('div');
+      el.className = 'card';
+      el.innerHTML = `
+        <div class="media">
+          <img src="${escapeAttr(a.img)}" alt="${escapeAttr(a.title)}">
+        </div>
+        <div class="body">
+          <span class="chip">${formatDate(a.date)}</span>
+          <h4>${escapeHTML(a.title)}</h4>
+          <p>${escapeHTML(a.desc)}</p>
+        </div>`;
+      el.addEventListener('click', () => openLightbox(a.img, a.title, a.desc));
+      achievementsGrid.appendChild(el);
+    });
+
+    // Timeline
+    const timelineList = $('#timelineList');
+    DATA.timeline.forEach(ev => {
+      const row = document.createElement('div');
+      row.className = 'event';
+      row.innerHTML = `
+        <div class="dot"></div>
+        <div class="panel">
+          <div class="date">${formatDate(ev.date)}</div>
+          <h4>${escapeHTML(ev.title)}</h4>
+          <p>${escapeHTML(ev.desc)}</p>
+        </div>`;
+      timelineList.appendChild(row);
+    });
+
+    // Media gallery
+    const mediaGrid = $('#mediaGrid');
+    DATA.media.forEach(m => {
+      const el = document.createElement('div');
+      el.className = 'card';
+      el.innerHTML = `
+        <div class="media">
+          <img src="${escapeAttr(m.img)}" alt="${escapeAttr(m.title)}">
+        </div>
+        <div class="body">
+          <h4>${escapeHTML(m.title)}</h4>
+          <p>${escapeHTML(m.desc)}</p>
+        </div>`;
+      el.addEventListener('click', () => openLightbox(m.img, m.title, m.desc));
+      mediaGrid.appendChild(el);
+    });
+
+    // Social links
+    const social = $('#socialLinks');
+    DATA.social.forEach(s => {
+      const a = document.createElement('a');
+      a.href = s.href;
+      a.textContent = s.label;
+      social.appendChild(a);
+    });
+
+    // Footer year
+    $('#year').textContent = new Date().getFullYear();
+
+    // Contact mailto
+    document.getElementById('contactForm').addEventListener('submit', e => {
+      e.preventDefault();
+      const form = e.currentTarget;
+      const name = form.name.value.trim();
+      const email = form.email.value.trim();
+      const message = form.message.value.trim();
+      const subject = encodeURIComponent(`Contact from ${name}`);
+      const body = encodeURIComponent(`Name: ${name}\nEmail: ${email}\n\n${message}`);
+      window.location.href = `mailto:office@solomonwombo.ng?subject=${subject}&body=${body}`;
+    });
+
+    // Lightbox
+    const lightbox = $('#lightbox');
+    const lightboxImg = $('#lightboxImg');
+    const lightboxTitle = $('#lightboxTitle');
+    const lightboxDesc = $('#lightboxDesc');
+
+    function openLightbox(src, title, desc){
+      lightboxImg.src = src;
+      lightboxTitle.textContent = title || '';
+      lightboxDesc.textContent = desc || '';
+      lightbox.classList.add('open');
+    }
+    lightbox.addEventListener('click', e => {
+      if (e.target === lightbox || e.target.classList.contains('frame')) {
+        lightbox.classList.remove('open');
+      }
+    });
+    window.addEventListener('keydown', e => {
+      if (e.key === 'Escape') lightbox.classList.remove('open');
+    });
+
+    // Helpers
+    function escapeHTML(s){
+      return String(s).replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+    }
+    function escapeAttr(s){
+      return escapeHTML(s).replace(/"/g,'&quot;');
+    }
+    function formatDate(d){
+      if(!d) return '';
+      const dt = new Date(d);
+      return dt.toLocaleDateString(undefined,{year:'numeric',month:'short',day:'2-digit'});
+    }
+  </script>
+</body>
+</html>
